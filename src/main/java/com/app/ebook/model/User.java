@@ -41,7 +41,6 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    @Transient
     @JsonIgnore
     private String password;
 

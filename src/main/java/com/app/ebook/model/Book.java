@@ -24,10 +24,10 @@ public class Book {
     private String title;
     private String author;
     private String genre;
-    @ManyToOne
-    @JoinColumn(name = "uploader_id")
-    private User uploader;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "uploader_id", referencedColumnName = "userId")
+    private User uploader;
     private String pdfUrl;
 
     @Column(updatable = false)
@@ -37,17 +37,12 @@ public class Book {
 	@UpdateTimestamp
     private LocalDateTime updatedAt;
     
-    public Book(String title, String author, String genre, User uploader, String description,
-			String pdfUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super();
+    public Book(String title, String author, String genre, String description, User uploader) {
 		this.title = title;
 		this.author = author;
 		this.genre = genre;
 		this.uploader = uploader;
 		this.description = description;
-		this.pdfUrl = pdfUrl;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 	}
     
 }
