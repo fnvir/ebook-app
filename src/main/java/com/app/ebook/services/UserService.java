@@ -3,7 +3,6 @@ package com.app.ebook.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,7 +16,6 @@ public class UserService {
 
     private UserRepository userRepository;
     
-    @Autowired
     public UserService(UserRepository ur) {
     	userRepository=ur;
     }

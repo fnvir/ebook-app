@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,7 @@ public class BookService {
 	private final BookRepository bookRepo;
     private final FileStorageService fileStorageService;
     private final UserService userService;
-
 	
-	@Autowired
 	public BookService(BookRepository bookRepo, FileStorageService fileStorageService, UserService userService) {
 		this.bookRepo=bookRepo;
 		this.fileStorageService = fileStorageService;

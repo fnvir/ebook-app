@@ -1,11 +1,19 @@
 
 package com.app.ebook.model;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,12 +22,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    public enum Role {
-        ADMIN,
-        MEMBER,
-        GUEST;
-    }
+@Builder
+public class User implements UserDetails {
+	
+	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +57,7 @@ public class User {
     private Role role;
     
 
-	public User(String firstName, String lastName, String username, @Email String email, String password,
+	public User(String firstName, String lastName, String username, String email, String password,
 			String picturePath, Role role) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -60,5 +66,11 @@ public class User {
 		this.password = password;
 		this.picturePath = picturePath;
 		this.role = role;
+	}
+
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 }
