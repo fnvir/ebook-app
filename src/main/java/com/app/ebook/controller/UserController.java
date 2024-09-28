@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +34,11 @@ public class UserController {
         @RequestParam(required=false) String sortBy,
         @RequestParam(required=false) String orderBy) {
         return userService.getUsersPaginated(page, size, sortBy, orderBy);
+    }
+    
+    @GetMapping("/test")
+    public ResponseEntity<Optional<User>> getUserByUsernameOrEmail(@RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(userService.getUserByUsernameOrEmail(payload.get("email"),payload.get("email")));
     }
 
     @GetMapping("/{id}")

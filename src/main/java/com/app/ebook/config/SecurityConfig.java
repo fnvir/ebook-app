@@ -28,7 +28,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(requests -> requests
-                    .requestMatchers(MyConstants.PUBLIC_URLS)
+                    .requestMatchers("/**")//MyConstants.PUBLIC_URLS)
                     .permitAll()
 //                    .requestMatchers(MyConstants.USER_URLS).hasAnyAuthority(Role.ADMIN.name(), Role.MEMBER.name())
 //                    .requestMatchers(MyConstants.ADMIN_URLS)//.hasAuthority(Role.ADMIN.name())

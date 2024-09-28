@@ -7,11 +7,11 @@
   {
     "name": "jwt.refresh.expiration",
     "type": "java.lang.String",
-    "description": "Default expiration duration for token"
+    "description": "Default expiration duration for refresh token"
   },
   {
     "name": "jwt.expiration",
     "type": "java.lang.String",
-    "description": "Default expiration duration for refresh token"
+    "description": "Default expiration duration for token"
   }
 ]}
