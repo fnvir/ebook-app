@@ -6,12 +6,27 @@
   },
   {
     "name": "jwt.refresh.expiration",
-    "type": "java.lang.String",
+    "type": "java.lang.Long",
     "description": "Default expiration duration for refresh token"
   },
   {
     "name": "jwt.expiration",
-    "type": "java.lang.String",
+    "type": "java.lang.Long",
     "description": "Default expiration duration for token"
+  },
+  {
+    "name": "storage.upload-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'file.upload-dir'"
+  },
+  {
+    "name": "storage.max-size",
+    "type": "java.lang.Long",
+    "description": "A description for 'file.max-size'"
+  },
+  {
+    "name": "storage.allowed-types",
+    "type": "java.util.List",
+    "description": "A description for 'file.allowed-types'"
   }
 ]}

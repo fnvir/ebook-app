@@ -1,5 +1,6 @@
 package com.app.ebook.services;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,8 +49,7 @@ public class AuthService {
 		);
 		var user=repository.findByEmailOrUsername(payload.get("email")).orElseThrow(()->new RuntimeException("User not found"));
 		var jwt=jwtUtil.generateToken(user);
-		var res=new HashMap<String, String>();
-		res.put("token", jwt);
+		var res=Collections.singletonMap("token", jwt);
 		return res;
 	}
 

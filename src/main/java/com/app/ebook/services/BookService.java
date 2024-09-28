@@ -21,10 +21,10 @@ import jakarta.validation.Valid;
 public class BookService {
 	
 	private final BookRepository bookRepo;
-    private final FileStorageService fileStorageService;
+    private final FileStorageServiceOld fileStorageService;
     private final UserService userService;
 	
-	public BookService(BookRepository bookRepo, FileStorageService fileStorageService, UserService userService) {
+	public BookService(BookRepository bookRepo, FileStorageServiceOld fileStorageService, UserService userService) {
 		this.bookRepo=bookRepo;
 		this.fileStorageService = fileStorageService;
 		this.userService = userService;

@@ -1,0 +1,36 @@
+
+#server:
+#  port: 5000
+
+logging:
+  level:
+    org.springframework.web: debug
+
+spring:
+  application:
+    name: ebook_app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ebook_app
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 20MB
+
+jwt:
+  secret: 53c9b731ad26ad0fc5e64c979dc0465b
+  expiration: 86400000
+  refresh.expiration: 604800000
+  
+storage:
+  upload-dir: ./useruploads  # Directory where files will be stored
+  allowed-types: [image/png, image/jpeg, application/pdf]  # Allowed MIME types
+  max-size: 104857600  # Max file size in bytes (100 MB)
