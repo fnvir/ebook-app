@@ -21,7 +21,7 @@ public class AuthController {
 	
 	private final AuthService authService;
 	
-	@PostMapping("/register/")
+	@PostMapping("/register")
 	public ResponseEntity<Map<String,Object>> register(@RequestBody UserDTO userDto) {
 		return ResponseEntity.status(201).body(authService.register(userDto));
 	}

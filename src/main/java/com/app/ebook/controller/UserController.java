@@ -27,8 +27,8 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     
-    @GetMapping("/")
-    public Page<User> getBooksPaginated(
+    @GetMapping
+    public Page<User> getUsersPaginated(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(required=false) String sortBy,

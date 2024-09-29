@@ -31,12 +31,19 @@ public class BookController {
 		bookService=bs;
 	}
 	
-	@GetMapping("/")
+	@GetMapping("/all")
 	public ResponseEntity<List<Book>> getAllBooks() {
 		return new ResponseEntity<List<Book>>(bookService.getAllBooks(),HttpStatus.OK);
 	}
 	
-//	@PostMapping("/")
+    @GetMapping
+    public Page<Book> getBooksPaginated(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+        return bookService.getBooksPaginated(page, size);
+    }
+	
+//	@PostMapping
 //	public ResponseEntity<Book> addBook(@RequestBody Book b) {
 //		Book b2=bookService.addBook(b);
 //		return new ResponseEntity<Book>(b, HttpStatus.CREATED);
@@ -64,13 +71,6 @@ public class BookController {
         Book savedBook = bookService.createBookWithFile(bookRequestDTO, file);
 
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/pages")
-    public Page<Book> getBooksPaginated(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
-        return bookService.getBooksPaginated(page, size);
     }
 
 }

@@ -67,7 +67,7 @@ public class FileStorageService {
     	Path destinationFile = userDir.resolve(filename).normalize().toAbsolutePath();
     	try {
     		Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-    		return "/"+username+"/"+filename;
+    		return "/content/"+username+"/"+filename;
     	} catch (IOException ex) {
     		throw new FileStorageException("Could not store file " + filename + ". Please try again!", ex);
     	}
@@ -86,21 +86,21 @@ public class FileStorageService {
         }
     }
 
-    public Path loadFile(String fileName) {
-        return storageLocation.resolve(fileName).normalize();
+    public Path loadFile(String username,String fileName) {
+        return storageLocation.resolve(username).resolve(fileName).normalize();
     }
     
-	public Resource loadAsResource(String filename) {
+	public Resource loadAsResource(String username,String filename) {
 		try {
-			Path file = loadFile(filename);
+			Path file = loadFile(username,filename);
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable())
 				return resource;
 			else 
-				throw new StorageFileNotFoundException("Could not read file: " + filename);
+				throw new StorageFileNotFoundException("Resource doesn't exist on server: " + filename);
 		}
 		catch (MalformedURLException e) {
-			throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+			throw new StorageFileNotFoundException("Invalid resouce: " + filename, e);
 		}
 	}
 	

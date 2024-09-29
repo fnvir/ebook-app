@@ -1,6 +1,8 @@
 package com.app.ebook.exceptions;
 
-public class StorageFileNotFoundException extends FileStorageException {
+public class StorageFileNotFoundException extends ResourceNotFoundException {
+
+	private static final long serialVersionUID = 1L;
 
 	public StorageFileNotFoundException(String message) {
 		super(message);

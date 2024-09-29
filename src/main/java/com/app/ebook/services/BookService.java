@@ -2,7 +2,6 @@ package com.app.ebook.services;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,12 +20,12 @@ import jakarta.validation.Valid;
 public class BookService {
 	
 	private final BookRepository bookRepo;
-    private final FileStorageServiceOld fileStorageService;
+    private final FileStorageService storageService;
     private final UserService userService;
 	
-	public BookService(BookRepository bookRepo, FileStorageServiceOld fileStorageService, UserService userService) {
+	public BookService(BookRepository bookRepo, FileStorageService fileStorageService, UserService userService) {
 		this.bookRepo=bookRepo;
-		this.fileStorageService = fileStorageService;
+		this.storageService = fileStorageService;
 		this.userService = userService;
 	}
 	
@@ -43,18 +42,11 @@ public class BookService {
 	}
 	
 	public Book createBookWithFile(@Valid BookDTO bookDTO, MultipartFile file) throws IOException {
-        Optional<User> uploader = userService.getUserById(bookDTO.getUploaderId());
-        if(uploader.isEmpty())
-             throw new ResourceNotFoundException("User not found with ID: " + bookDTO.getUploaderId());
+		User uploader = userService.getUserById(bookDTO.getUploaderId())
+				.orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + bookDTO.getUploaderId()));
         
-        String sanitizedTitle=bookDTO.getTitle().replaceAll("[^a-zA-Z0-9\\-]", "_");
-        Book book = new Book(sanitizedTitle,bookDTO.getAuthor(),bookDTO.getGenre(),bookDTO.getDescription(),uploader.get());
-        
-        String pdfUrl = fileStorageService.savePdfFile(uploader.get().getUsername(), sanitizedTitle, file);
-        book.setPdfUrl(pdfUrl);
-        
+        String pdfUrl = storageService.storeFile(uploader.getUsername(), bookDTO.getTitle(), file);
+        Book book = new Book(bookDTO.getTitle(),bookDTO.getAuthor(),bookDTO.getGenre(),bookDTO.getDescription(),uploader,pdfUrl);
         return bookRepo.save(book);
 	}
-	
-	
 }

@@ -4,7 +4,7 @@
 
 logging:
   level:
-    org.springframework.web: debug
+    org.springframework.web: trace
 
 spring:
   application:
@@ -27,8 +27,8 @@ spring:
 
 jwt:
   secret: 53c9b731ad26ad0fc5e64c979dc0465b
-  expiration: 86400000
-  refresh.expiration: 604800000
+  expiration: 259200000 # 3 days
+  refresh.expiration: 604800000 # 7 days
   
 storage:
   upload-dir: ./useruploads  # Directory where files will be stored
