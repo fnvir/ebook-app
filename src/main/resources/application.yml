@@ -7,12 +7,14 @@ logging:
     org.springframework.web: trace
 
 spring:
+  config:
+    import: .env[.properties]
   application:
     name: ebook_app
   datasource:
     url: jdbc:postgresql://localhost:5432/ebook_app
-    username: postgres
-    password: 1234
+    username: ${DB_USER}
+    password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -26,7 +28,7 @@ spring:
       max-request-size: 20MB
 
 jwt:
-  secret: 53c9b731ad26ad0fc5e64c979dc0465b
+  secret: ${JWT_SECRET}
   expiration: 259200000 # 3 days
   refresh.expiration: 604800000 # 7 days
   
