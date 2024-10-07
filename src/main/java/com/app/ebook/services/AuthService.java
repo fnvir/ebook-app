@@ -3,6 +3,7 @@ package com.app.ebook.services;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.app.ebook.model.Role;
 import com.app.ebook.model.User;
-import com.app.ebook.payload.UserDTO;
+import com.app.ebook.dto.UserDTO;
+import com.app.ebook.dto.UserRegistrationDTO;
 import com.app.ebook.repository.UserRepository;
 import com.app.ebook.security.JwtUtil;
 
@@ -24,23 +26,22 @@ public class AuthService {
 	private final UserRepository repository;
 	private final PasswordEncoder encoder;
 	private final AuthenticationManager authManager;
+	private final FileStorageService storageService;
 	private final JwtUtil jwtUtil;
 
-	public Map<String, Object> register(UserDTO userDto) {
+	public UserDTO register(UserRegistrationDTO regDTO) {
 		User user = User.builder()
-				.firstName(userDto.getFirstName())
-				.lastName(userDto.getLastName())
-				.email(userDto.getEmail())
-				.password(encoder.encode(userDto.getPassword()))
-				.username(userDto.getUsername())
-				.role(Role.MEMBER)
+				.firstName(regDTO.getFirstname())
+				.lastName(regDTO.getLastname())
+				.email(regDTO.getEmail())
+				.password(encoder.encode(regDTO.getPassword()))
+				.username(regDTO.getUsername()).role(regDTO.getRole())
+				.picturePath(storageService.storeFile(regDTO.getPicture(),
+						regDTO.getUsername() + "_" + UUID.randomUUID().toString().replace("-", "")))
 				.build();
 		user=repository.save(user);
-		var jwt=jwtUtil.generateToken(user);
-		var res=new HashMap<String, Object>();
-		res.put("token", jwt);
-		res.put("user", user);
-		return res;
+		return new UserDTO(user.getUserId(), user.getFirstName(), user.getLastName(), user.getUsername(),
+				user.getEmail(), user.getPicturePath(), user.getProfileViews());
 	}
 
 	public Map<String, String> login(Map<String, String> payload) {

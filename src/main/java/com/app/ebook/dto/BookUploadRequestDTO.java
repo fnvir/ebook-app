@@ -1,9 +1,9 @@
-package com.app.ebook.payload;
+package com.app.ebook.dto;
 
 import lombok.Data;
 
 @Data
-public class BookDTO {
+public class BookUploadRequestDTO {
     private String title;
     private String author;
     private String genre;

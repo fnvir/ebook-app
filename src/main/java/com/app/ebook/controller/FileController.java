@@ -36,5 +36,11 @@ public class FileController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
+	
+	@GetMapping("/content/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException{
+		return serveFile("", filename);
+	}
 
 }

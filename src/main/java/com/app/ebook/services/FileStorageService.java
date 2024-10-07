@@ -35,8 +35,13 @@ public class FileStorageService {
     }
     
     public String storeFile(MultipartFile file) {
-        validateFile(file);
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    	return storeFile(file, file.getOriginalFilename());
+    }
+    
+    public String storeFile(MultipartFile file, String filename) {
+    	validateFile(file);
+    	String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(filename)+(fileExtension==null||fileExtension.isBlank()?".bin":"."+fileExtension);
 		Path destinationFile = storageLocation.resolve(fileName)
 				.normalize().toAbsolutePath();
 		if (!destinationFile.getParent().equals(storageLocation.toAbsolutePath())) {
@@ -44,13 +49,13 @@ public class FileStorageService {
 		}
         try {
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-            return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+        return "/content/"+fileName;
     }
     
-    public String storeFile(String username, String newFilename, MultipartFile file) {
+    public String storeUserContent(String username, String newFilename, MultipartFile file) {
     	validateFile(file);
     	String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
     	String fileExtension = StringUtils.getFilenameExtension(originalFileName);

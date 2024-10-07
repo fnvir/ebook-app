@@ -1,21 +1,31 @@
 package com.app.ebook.model;
 
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "books")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book {
 
 	@Id
@@ -27,9 +37,9 @@ public class Book {
     private String description;
     @ManyToOne
     @JoinColumn(name = "uploader_id", referencedColumnName = "userId")
-    private User uploader;
+    private User uploader=null;
     private String pdfUrl;
-
+    
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

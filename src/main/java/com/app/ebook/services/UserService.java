@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.app.ebook.model.User;
+import com.app.ebook.dto.UserDTO;
 import com.app.ebook.repository.UserRepository;
 
 @Service
@@ -35,6 +36,20 @@ public class UserService {
     public Optional<User> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
+    
+    public UserDTO viewProfile(Long userId) {
+    	 User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("No such user"));
+    	 user.setProfileViews(user.getProfileViews() + 1);
+    	 user = userRepository.save(user);
+    	 return UserDTO.builder()
+    			 .userId(user.getUserId())
+    			 .firstName(user.getFirstName())
+    			 .lastName(user.getLastName())
+    			 .email(user.getEmail())
+    			 .picturePath(user.getPicturePath())
+    			 .profileViews(user.getProfileViews())
+    			 .build();
+    }
 
     public User createUser(User user) {
         return userRepository.save(user);
@@ -51,7 +66,7 @@ public class UserService {
         }
         return null;
     }
-
+    
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }

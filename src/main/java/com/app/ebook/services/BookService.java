@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.app.ebook.exceptions.ResourceNotFoundException;
 import com.app.ebook.model.Book;
 import com.app.ebook.model.User;
-import com.app.ebook.payload.BookDTO;
+import com.app.ebook.dto.BookUploadRequestDTO;
 import com.app.ebook.repository.BookRepository;
 
 import jakarta.validation.Valid;
@@ -41,12 +41,16 @@ public class BookService {
 		return bookRepo.save(b);
 	}
 	
-	public Book createBookWithFile(@Valid BookDTO bookDTO, MultipartFile file) throws IOException {
+	public Book createBookWithFile(@Valid BookUploadRequestDTO bookDTO, MultipartFile file) throws IOException {
 		User uploader = userService.getUserById(bookDTO.getUploaderId())
 				.orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + bookDTO.getUploaderId()));
         
-        String pdfUrl = storageService.storeFile(uploader.getUsername(), bookDTO.getTitle(), file);
+        String pdfUrl = storageService.storeUserContent(uploader.getUsername(), bookDTO.getTitle(), file);
         Book book = new Book(bookDTO.getTitle(),bookDTO.getAuthor(),bookDTO.getGenre(),bookDTO.getDescription(),uploader,pdfUrl);
         return bookRepo.save(book);
+	}
+
+	public Book getBookById(Long id) {
+		return bookRepo.findById(id).orElseThrow(()->new IllegalArgumentException("No such books found"));
 	}
 }

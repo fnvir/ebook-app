@@ -1,38 +1,46 @@
-
 #server:
 #  port: 5000
 
 logging:
-  level:
-    org.springframework.web: trace
+    level:
+        org.springframework.web: debug #trace
+        org.hibernate.orm.jdbc.bind: trace
+        org.hibernate.type.descriptor.sql: trace
 
 spring:
-  config:
-    import: .env[.properties]
-  application:
-    name: ebook_app
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ebook_app
-    username: ${DB_USER}
-    password: ${DB_PASS}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate.format_sql: true
-    show-sql: true
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 20MB
+    config:
+        import: .env[.properties]
+    application:
+        name: ebook_app
+    datasource:
+        url: jdbc:postgresql://localhost:5432/ebook_app
+        username: ${DB_USER}
+        password: ${DB_PASS}
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate.format_sql: true
+        show-sql: true
+    servlet:
+        multipart:
+            max-file-size: 100MB
+            max-request-size: 20MB
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration: 259200000 # 3 days
-  refresh.expiration: 604800000 # 7 days
-  
+    secret: ${JWT_SECRET}
+    expiration: 259200000 # 3 days
+    refresh.expiration: 604800000 # 7 days
+
 storage:
-  upload-dir: ./useruploads  # Directory where files will be stored
-  allowed-types: [image/png, image/jpeg, application/pdf]  # Allowed MIME types
-  max-size: 104857600  # Max file size in bytes (100 MB)
+    upload-dir: ./useruploads # Directory where files will be stored
+    allowed-types: [
+            image/png,
+            image/apng,
+            image/jpeg,
+            image/gif,
+            image/webp,
+            application/pdf,
+        ] # Allowed MIME types
+    max-size: 104857600 # Max file size in bytes (100 MB)

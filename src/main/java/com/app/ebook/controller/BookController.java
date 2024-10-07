@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ebook.model.Book;
-import com.app.ebook.payload.BookDTO;
+import com.app.ebook.dto.BookUploadRequestDTO;
 import com.app.ebook.services.BookService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 	
 	private BookService bookService;
@@ -34,6 +35,11 @@ public class BookController {
 	@GetMapping("/all")
 	public ResponseEntity<List<Book>> getAllBooks() {
 		return new ResponseEntity<List<Book>>(bookService.getAllBooks(),HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Book> getAllBooks(@PathVariable Long id) {
+		return ResponseEntity.ok(bookService.getBookById(id));
 	}
 	
     @GetMapping
@@ -65,7 +71,7 @@ public class BookController {
 	
 	@PostMapping("/add")
     public ResponseEntity<Book> addBook(
-            @Valid @ModelAttribute BookDTO bookRequestDTO,
+            @Valid @ModelAttribute BookUploadRequestDTO bookRequestDTO,
             @RequestPart("file") MultipartFile file) throws IOException {
 
         Book savedBook = bookService.createBookWithFile(bookRequestDTO, file);
