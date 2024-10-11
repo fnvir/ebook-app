@@ -4,6 +4,7 @@ package com.app.ebook.model;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,7 +68,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
     
-    private Integer profileViews=0;
+    @ColumnDefault("0")
+    private Integer profileViews;
 
 	public User(String firstName, String lastName, String username, String email, String password,
 			String picturePath, Role role) {
@@ -79,7 +81,6 @@ public class User implements UserDetails {
 		this.picturePath = picturePath;
 		this.role = role;
 	}
-
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

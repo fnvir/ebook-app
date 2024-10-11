@@ -37,7 +37,7 @@ public class Book {
     private String description;
     @ManyToOne
     @JoinColumn(name = "uploader_id", referencedColumnName = "userId")
-    private User uploader=null;
+    private User uploader;
     private String pdfUrl;
     
     @Column(updatable = false)

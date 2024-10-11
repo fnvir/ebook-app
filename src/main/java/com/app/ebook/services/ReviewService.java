@@ -1,9 +1,12 @@
 package com.app.ebook.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import com.app.ebook.dto.ReviewRequestDTO;
@@ -46,6 +49,11 @@ public class ReviewService {
         review = reviewRepo.save(review);
 
         return review;
+    }
+    
+	public Long getReviewerIDById(Long reviewId) {
+		return reviewRepo.findReviewerIdByReviewId(reviewId)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid Review ID"));
     }
 	
     public List<Review> getAllReviews() {
@@ -105,16 +113,10 @@ public class ReviewService {
         review.setReviewText(reviewRequest.getReviewText());
         return reviewRepo.save(review);
     }
-    
-    public void deleteReview(Long reviewId, Long reviewerId) {
-        Review review = reviewRepo.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
 
-        if (review.getReviewer() != null && !review.getReviewer().getUserId().equals(reviewerId)) {
-            throw new RuntimeException("You can only delete your own review");
-        }
-
-        reviewRepo.delete(review);
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #r == authentication.principal.userId")
+    public void deleteReview(Long reviewId, @P("r") Long reviewerId) {
+        reviewRepo.deleteById(reviewId);
     }
-	
-	
+    
 }

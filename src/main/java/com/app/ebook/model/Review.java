@@ -33,7 +33,7 @@ public class Review {
     private Long reviewId;
 
     @ManyToOne
-    @JoinColumn(name = "reviewerId", referencedColumnName="userId", nullable = true)
+    @JoinColumn(name = "reviewerId", referencedColumnName="userId")
     private User reviewer;
     
     @Column(nullable = false)

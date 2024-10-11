@@ -2,6 +2,7 @@ package com.app.ebook.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,12 +17,16 @@ import com.app.ebook.model.User;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 	
-//    List<Review> findByReviewerUserId(Long reviewerId);
+	
+	@Query("SELECT r.reviewer.userId FROM Review r where r.reviewId = ?1")
+	Optional<Long> findReviewerIdByReviewId(Long reviewId);
 	
 	List<ReviewsByBook> findByBookBookId(Long bookId);
 	
 	Page<ReviewsByBook> findByBookBookId(Long bookId, Pageable pageable);
     
+//    List<Review> findByReviewerUserId(Long reviewerId);
+	
     @Query(value="SELECT r.review_id, r.is_anonymous, r.rating, r.review_text, r.created_at, "
     		+ "b.book_id, b.title, b.author, b.genre, b.description, "
     		+ "b.created_at AS book_created_at, b.updated_at AS book_updated_at "
@@ -32,7 +37,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     		countQuery = "SELECT COUNT(*) FROM reviews r WHERE r.reviewer_id=:reviewerId",
     		nativeQuery = true)
     Page<ReviewsByUser> findByReviewerWithoutUploader(@Param("reviewerId") Long reviewerId, Pageable pageable);
-    
+
+    /**
+     * Projection for {@link com.app.ebook.model.Review}
+     */
     public static interface ReviewsByBook {
         Long getReviewId();
         User getReviewer();
@@ -41,7 +49,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         String getReviewText();
         LocalDateTime getCreatedAt();
     }
-    
+
+    /**
+     * Projection for {@link com.app.ebook.model.Review}
+     */
     public static interface ReviewsByUser {
         Long getReviewId();
         boolean getIsAnonymous();
