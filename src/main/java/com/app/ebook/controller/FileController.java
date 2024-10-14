@@ -14,33 +14,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.app.ebook.services.FileStorageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@Tag(name = "Files", description = "API for serving files")
 public class FileController {
-	
-	private final FileStorageService storageService;
-	
-	@GetMapping("/content/{username}/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String username, @PathVariable String filename) throws IOException {
 
-		Resource file = storageService.loadAsResource(username,filename);
+    private final FileStorageService storageService;
 
-		if (file == null)
-			return ResponseEntity.notFound().build();
+    @GetMapping("/content/{username}/{filename:.+}")
+    @ResponseBody
+    @Operation(summary = "Serve a user's file", description = "Serve a file uploaded by an user")
+    @ApiResponse(responseCode = "200", description = "File served successfully")
+    public ResponseEntity<Resource> serveFile(@PathVariable String username, @PathVariable String filename) throws IOException {
 
-		return ResponseEntity.ok()
-				.contentType(MediaType.parseMediaType(Files.probeContentType(file.getFile().toPath())))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-				.body(file);
-	}
-	
-	@GetMapping("/content/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException{
-		return serveFile("", filename);
-	}
+        Resource file = storageService.loadAsResource(username, filename);
 
+        if (file == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(Files.probeContentType(file.getFile().toPath())))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
+
+    @GetMapping("/content/{filename:.+}")
+    @ResponseBody
+    @Operation(summary = "Serve a public file", description = "Serve a public file")
+    @ApiResponse(responseCode = "200", description = "Public file served successfully")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException {
+        return serveFile("", filename);
+    }
 }

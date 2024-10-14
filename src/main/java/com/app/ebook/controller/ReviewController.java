@@ -1,27 +1,37 @@
 package com.app.ebook.controller;
 
-import com.app.ebook.dto.ReviewRequestDTO;
-import com.app.ebook.dto.ReviewResponseDTO;
-import com.app.ebook.model.Review;
-import com.app.ebook.services.ReviewService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.app.ebook.dto.ReviewRequestDTO;
+import com.app.ebook.dto.ReviewResponseDTO;
+import com.app.ebook.model.Review;
+import com.app.ebook.services.ReviewService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
-@Tag(name = "reviews", description = "the review API")
+@Tag(name = "Reviews", description = "API for handling reviews")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
@@ -49,6 +59,8 @@ public class ReviewController {
 	
 	// create
     @PostMapping("/book/{bookId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponse(responseCode = "201", description = "Review added successfully")
 	public ResponseEntity<Review> createReview(@PathVariable Long bookId,
 											   @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
         reviewRequestDTO.setBookId(bookId);
@@ -58,6 +70,7 @@ public class ReviewController {
     
     // Update review
     @PutMapping("/{reviewId}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long reviewId,
                                                           @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
     	ReviewResponseDTO updatedReview = reviewService.updateReview(reviewId, reviewRequestDTO);
@@ -66,6 +79,8 @@ public class ReviewController {
     
     // Delete review
     @DeleteMapping("/{reviewId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponse(responseCode = "204", description = "Review deleted successfully")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
     	Long reviewerId = reviewService.getReviewerIDById(reviewId);
     	reviewService.deleteReview(reviewId,reviewerId);

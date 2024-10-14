@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class AuthService {
 		authManager.authenticate(
 			new UsernamePasswordAuthenticationToken(payload.get("email"), payload.get("password"))
 		);
-		var user=repository.findByEmailOrUsername(payload.get("email")).orElseThrow(()->new RuntimeException("User not found"));
+		var user=repository.findByEmailOrUsername(payload.get("email")).orElseThrow(()->new UsernameNotFoundException("User not found"));
 		var jwt=jwtUtil.generateToken(user);
 		var res=Collections.singletonMap("token", jwt);
 		return res;

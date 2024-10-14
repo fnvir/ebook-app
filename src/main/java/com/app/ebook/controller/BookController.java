@@ -15,15 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.ebook.model.Book;
 import com.app.ebook.dto.BookResponseDTO;
 import com.app.ebook.dto.BookUploadRequestDTO;
 import com.app.ebook.services.BookService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/books")
+@Tag(name = "Books", description = "API for handling books")
 public class BookController {
 	
 	private BookService bookService;
@@ -33,6 +38,7 @@ public class BookController {
 	}
 	
 	@GetMapping("/all")
+	@Operation(summary="Get all books as a list (non-paginated)")
 	public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
 		return new ResponseEntity<>(bookService.getAllBooks(),HttpStatus.OK);
 	}
@@ -43,33 +49,20 @@ public class BookController {
 	}
 	
     @GetMapping
+    @Operation(summary = "Get books paginated")
     public Page<BookResponseDTO> getBooksPaginated(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
         return bookService.getBooksPaginated(page, size);
     }
 	
-//	@PostMapping
-//	public ResponseEntity<Book> addBook(@RequestBody Book b) {
-//		Book b2=bookService.addBook(b);
-//		return new ResponseEntity<Book>(b, HttpStatus.CREATED);
-//	}	
-	
-//	@PostMapping("/add")
-//	public ResponseEntity<Book> addBook(@RequestParam("title") String title, @RequestParam("author") String author,
-//			@RequestParam("genre") String genre, @RequestParam("uploader") String uploader,
-//			@RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
-//		try {
-//			String pdfUrl = bookService.savePdfFile(uploader, title, file);
-//			Book newBook = new Book(title, author, genre, new User(uploader), description, pdfUrl, null, null);
-//			Book savedBook = bookService.addBook(newBook);
-//			return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
-//		} catch (IOException e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-	
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Add a new book", description = "Add a new book with a file upload")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Book created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request, validation failed")
+    })    
     public ResponseEntity<BookResponseDTO> addBook(
     		@Valid @ModelAttribute BookUploadRequestDTO bookRequestDTO) throws IOException {
 

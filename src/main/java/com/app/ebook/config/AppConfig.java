@@ -16,6 +16,7 @@ import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -60,8 +61,12 @@ public class AppConfig {
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Ebook Sharing App - API").version("0.1.0"))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .info(new Info()
+                        .version("0.9.9")
+                        .title("Ebook Sharing App - API")
+                        .description("Backend API for Ebook Sharing App - A platform where users can upload pdfs and share with others. Made with Spring Boot")
+                        .contact(new Contact().name("Farhan Tanvir").url("https://linkedin.com/in/fnvir").email("farhantaanvir@gmail.com")))
+//                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(Type.HTTP)
