@@ -5,6 +5,7 @@ import com.app.ebook.dto.ReviewResponseDTO;
 import com.app.ebook.model.Review;
 import com.app.ebook.services.ReviewService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +21,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
+@Tag(name = "reviews", description = "the review API")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
 	
     @GetMapping
-    public List<Review> getAllReviews() {
+    public List<ReviewResponseDTO> getAllReviews() {
         return reviewService.getAllReviews();
     }
     
@@ -56,9 +58,9 @@ public class ReviewController {
     
     // Update review
     @PutMapping("/{reviewId}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId,
-                                                          @RequestBody ReviewRequestDTO reviewRequestDTO) {
-    	Review updatedReview = reviewService.updateReview(reviewId, reviewRequestDTO);
+    public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long reviewId,
+                                                          @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
+    	ReviewResponseDTO updatedReview = reviewService.updateReview(reviewId, reviewRequestDTO);
         return ResponseEntity.ok(updatedReview);
     }
     

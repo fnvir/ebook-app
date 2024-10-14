@@ -11,7 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.app.ebook.model.Role;
+import static com.app.ebook.model.Role.*;
+
 import com.app.ebook.security.JwtAuthFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 	
 	private final JwtAuthFilter jwtFilter;
@@ -31,12 +32,11 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(requests -> requests
-                    .requestMatchers(HttpMethod.DELETE, "/api/reviews/**")
-                    .authenticated()
-                    .requestMatchers("/**")//MyConstants.PUBLIC_URLS)
+                    .requestMatchers(MyConstants.PUBLIC_URLS)
                     .permitAll()
-//                    .requestMatchers(MyConstants.USER_URLS).hasAnyAuthority(Role.ADMIN.name(), Role.MEMBER.name())
-//                    .requestMatchers(MyConstants.ADMIN_URLS)//.hasAuthority(Role.ADMIN.name())
+                    .requestMatchers(HttpMethod.GET, MyConstants.PUBLIC_GET_URLS)
+                    .permitAll()
+                    .requestMatchers(MyConstants.ADMIN_URLS).hasRole(ADMIN.name())
                     .anyRequest()
                     .authenticated())
             .exceptionHandling(handling -> handling

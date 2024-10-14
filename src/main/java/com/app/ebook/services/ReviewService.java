@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.ebook.dto.ReviewRequestDTO;
 import com.app.ebook.dto.ReviewResponseDTO;
+import com.app.ebook.mapper.ReviewMapper;
 import com.app.ebook.model.Book;
 import com.app.ebook.model.Review;
 import com.app.ebook.model.User;
@@ -27,6 +28,7 @@ public class ReviewService {
 	private final ReviewRepository reviewRepo;
     private final BookRepository bookRepo;
     private final UserRepository userRepo;
+    private final ReviewMapper reviewMapper;
 	
     public Review addReview(ReviewRequestDTO reviewRequest) {
         Book book = bookRepo.findById(reviewRequest.getBookId())
@@ -56,8 +58,8 @@ public class ReviewService {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid Review ID"));
     }
 	
-    public List<Review> getAllReviews() {
-        return reviewRepo.findAll();
+    public List<ReviewResponseDTO> getAllReviews() {
+        return reviewRepo.findAll().stream().map(reviewMapper::reviewToReviewResponseDTO).toList();
     }
 
 	public Page<ReviewResponseDTO> getReviewsWithoutReviewerAndBookUploader(Long id, final Pageable pageable) {
@@ -76,34 +78,15 @@ public class ReviewService {
 	}
 	
 	public List<ReviewResponseDTO> getReviewsOfBook(Long id) {
-		return reviewRepo.findByBookBookId(id).stream().map(review -> 
-	        ReviewResponseDTO.builder()
-	        .reviewId(review.getReviewId())
-	        .reviewer(review.getReviewer())
-	        .isAnonymous(review.getIsAnonymous())
-	        .rating(review.getRating())
-	        .reviewText(review.getReviewText())
-	        .createdAt(review.getCreatedAt())
-	        .build()
-		).toList();
+		return reviewRepo.findByBookBookId(id).stream().map(reviewMapper::reviewsByBookToReviewResponseDTO).toList();
 	}
 	
 	public Page<ReviewResponseDTO> getReviewsOfBookPageable(Long id, final Pageable pageable) {
-		return reviewRepo.findByBookBookId(id,pageable)
-			.map(review -> 
-				ReviewResponseDTO.builder()
-				.reviewId(review.getReviewId())
-				.reviewer(review.getReviewer())
-				.isAnonymous(review.getIsAnonymous())
-				.rating(review.getRating())
-				.reviewText(review.getReviewText())
-				.createdAt(review.getCreatedAt())
-				.build()
-			);
+		return reviewRepo.findByBookBookId(id,pageable).map(reviewMapper::reviewsByBookToReviewResponseDTO);
 	}
 	
-    // Update review
-	public Review updateReview(Long reviewId, ReviewRequestDTO reviewRequest) {
+//	@PreAuthorize("#r.reviewerId == authentication.principal.userId")
+	public ReviewResponseDTO updateReview(Long reviewId, @P("r") ReviewRequestDTO reviewRequest) {
         Review review = reviewRepo.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
         if (review.getReviewer() != null && !review.getReviewer().getUserId().equals(reviewRequest.getReviewerId())) {
@@ -111,7 +94,8 @@ public class ReviewService {
         }
         review.setRating(reviewRequest.getRating());
         review.setReviewText(reviewRequest.getReviewText());
-        return reviewRepo.save(review);
+        review.setAnonymous(reviewRequest.getIsAnonymous());
+        return reviewMapper.reviewToReviewResponseDTO(reviewRepo.save(review));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') OR #r == authentication.principal.userId")

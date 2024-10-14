@@ -8,11 +8,12 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({ResourceNotFoundException.class, NoResourceFoundException.class})
@@ -21,7 +22,8 @@ public class GlobalExceptionHandler {
     }
     
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException e) {
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException e) {
 		List<Map<String, Object>> errors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> {
 			Map<String, Object> errorDetails = new HashMap<>();
 			errorDetails.put("field", fieldError.getField());
@@ -29,11 +31,11 @@ public class GlobalExceptionHandler {
 			errorDetails.put("message", fieldError.getDefaultMessage());
 			return errorDetails;
 		}).toList();
-		return ResponseEntity.badRequest().body(Collections.singletonMap("errors", errors));
+		return Collections.singletonMap("errors", errors);
 	}
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleGlobalException(Exception ex) {
-//        return new ResponseEntity<>("Internal server error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception ex) {
+        return new ResponseEntity<>("Internal server error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

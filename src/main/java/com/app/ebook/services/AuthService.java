@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.app.ebook.model.Role;
 import com.app.ebook.model.User;
 import com.app.ebook.dto.UserDTO;
 import com.app.ebook.dto.UserRegistrationDTO;
@@ -35,7 +34,8 @@ public class AuthService {
 				.lastName(regDTO.getLastname())
 				.email(regDTO.getEmail())
 				.password(encoder.encode(regDTO.getPassword()))
-				.username(regDTO.getUsername()).role(regDTO.getRole())
+				.username(regDTO.getUsername())
+				.role(regDTO.getRole())
 				.picturePath(storageService.storeFile(regDTO.getPicture(),
 						regDTO.getUsername() + "_" + UUID.randomUUID().toString().replace("-", "")))
 				.build();
