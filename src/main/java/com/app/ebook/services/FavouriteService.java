@@ -4,6 +4,8 @@ import com.app.ebook.model.Favourite;
 import com.app.ebook.model.Favourite.FavouriteBookId;
 import com.app.ebook.repository.FavouriteRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,11 @@ public class FavouriteService {
         return repository.existsById(id);
     }
 
-    public List<Favourite> getFavouritesByUser(Long userId) {
+    public List<Favourite> getAllFavouritesByUser(Long userId) {
         return repository.findAllByUserUserId(userId);
+    }
+
+    public Page<Favourite> getFavouritesByUser(Long userId, final Pageable pageable) {
+        return repository.findByUserUserId(userId,pageable);
     }
 }

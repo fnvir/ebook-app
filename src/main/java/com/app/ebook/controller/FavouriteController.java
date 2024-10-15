@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +25,15 @@ public class FavouriteController {
 
     private final FavouriteService favouriteService;
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user/{userId}/all")
     public ResponseEntity<List<Favourite>> getFavouritesByUser(@PathVariable Long userId) {
-        List<Favourite> favourites = favouriteService.getFavouritesByUser(userId);
+        List<Favourite> favourites = favouriteService.getAllFavouritesByUser(userId);
+        return ResponseEntity.ok(favourites);
+    }
+    
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<Favourite>> getFavouritesByUser(@PathVariable Long userId, final Pageable pageable) {
+        Page<Favourite> favourites = favouriteService.getFavouritesByUser(userId,pageable);
         return ResponseEntity.ok(favourites);
     }
     
