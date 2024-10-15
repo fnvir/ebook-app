@@ -34,7 +34,5 @@ public class UserRegistrationDTO {
     @NotNull(message = "Password is required")
     private String password;
 
-    private Role role;
-
     private MultipartFile picture;
 }

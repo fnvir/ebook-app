@@ -16,9 +16,11 @@ import com.app.ebook.dto.BookResponseDTO;
 import com.app.ebook.dto.BookUploadRequestDTO;
 import com.app.ebook.repository.BookRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BookService {
 	

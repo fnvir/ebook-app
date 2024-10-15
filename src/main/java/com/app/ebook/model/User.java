@@ -69,7 +69,8 @@ public class User implements UserDetails {
     private Role role;
     
     @ColumnDefault("0")
-    private Integer profileViews;
+    @Builder.Default
+    private Integer profileViews=0;
 
 	public User(String firstName, String lastName, String username, String email, String password,
 			String picturePath, Role role) {

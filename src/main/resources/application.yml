@@ -3,7 +3,7 @@
 
 logging:
    level:
-      org.springframework.web: debug #trace
+      org.springframework.web: trace #trace
       org.hibernate.orm.jdbc.bind: trace
       org.hibernate.type.descriptor.sql: trace
 

@@ -3,6 +3,7 @@ package com.app.ebook.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -43,6 +44,7 @@ public class Book {
     
     @Column(updatable = false)
     @CreationTimestamp
+    @ColumnDefault("current_timestamp")
     private LocalDateTime createdAt;
 
 	@UpdateTimestamp

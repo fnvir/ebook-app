@@ -1,7 +1,6 @@
 package com.app.ebook.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +18,12 @@ import com.app.ebook.repository.BookRepository;
 import com.app.ebook.repository.ReviewRepository;
 import com.app.ebook.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ReviewService {
 	
 	private final ReviewRepository reviewRepo;
