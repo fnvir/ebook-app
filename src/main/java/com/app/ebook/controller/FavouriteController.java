@@ -1,14 +1,18 @@
 package com.app.ebook.controller;
 
+import com.app.ebook.dto.FavouriteResponseDTO;
 import com.app.ebook.model.Favourite;
 import com.app.ebook.model.Favourite.FavouriteBookId;
 import com.app.ebook.services.FavouriteService;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +30,20 @@ public class FavouriteController {
     private final FavouriteService favouriteService;
 
     @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<Favourite>> getFavouritesByUser(@PathVariable Long userId) {
-        List<Favourite> favourites = favouriteService.getAllFavouritesByUser(userId);
+    public ResponseEntity<List<FavouriteResponseDTO>> getFavouritesByUser(@PathVariable Long userId) {
+        var favourites = favouriteService.getAllFavouritesByUser(userId);
         return ResponseEntity.ok(favourites);
     }
     
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<Favourite>> getFavouritesByUser(@PathVariable Long userId, final Pageable pageable) {
-        Page<Favourite> favourites = favouriteService.getFavouritesByUser(userId,pageable);
+    public ResponseEntity<Page<FavouriteResponseDTO>> getFavouritesByUser(@PathVariable Long userId, @ParameterObject final Pageable pageable) {
+        var favourites = favouriteService.getFavouritesByUser(userId,pageable);
         return ResponseEntity.ok(favourites);
     }
     
     @PostMapping("/{userId}/{bookId}")
+    @ApiResponse(responseCode = "200", description = "Added as favourite successfully!", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Book already exists in user's favourites", content=@Content)
     public ResponseEntity<String> addFavourite(@PathVariable Long userId, @PathVariable Long bookId) {
         if(favouriteService.exists(userId, bookId))
             return ResponseEntity.badRequest().body("Book already exists in user's favourites");

@@ -3,7 +3,9 @@ package com.app.ebook.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,13 @@ public class BookController {
 	public BookController(BookService bs) {
 		bookService=bs;
 	}
-	
+	   
+    @GetMapping
+    @Operation(summary = "Get books paginated")
+    public Page<BookResponseDTO> getBooksPaginated(@ParameterObject final Pageable pageable) {
+        return bookService.getBooksPaginated(pageable);
+    }
+    
 	@GetMapping("/all")
 	@Operation(summary="Get all books as a list (non-paginated)")
 	public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
@@ -47,14 +55,6 @@ public class BookController {
 	public ResponseEntity<BookResponseDTO> getAllBooks(@PathVariable Long id) {
 		return ResponseEntity.ok(bookService.getBookById(id));
 	}
-	
-    @GetMapping
-    @Operation(summary = "Get books paginated")
-    public Page<BookResponseDTO> getBooksPaginated(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
-        return bookService.getBooksPaginated(page, size);
-    }
 	
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Add a new book", description = "Add a new book with a file upload")

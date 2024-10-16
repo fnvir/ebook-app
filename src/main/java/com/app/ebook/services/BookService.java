@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,8 +41,8 @@ public class BookService {
 		return bookRepo.findAll().stream().map(bookMapper::bookToBookResponseDTO).toList();
 	}
 	
-    public Page<BookResponseDTO> getBooksPaginated(int page, int size) {
-        return bookRepo.findAll(PageRequest.of(page, size)).map(bookMapper::bookToBookResponseDTO);
+    public Page<BookResponseDTO> getBooksPaginated(final Pageable pageable) {
+        return bookRepo.findAll(pageable).map(bookMapper::bookToBookResponseDTO);
     }
 	
 	public Book addBook(Book b) {

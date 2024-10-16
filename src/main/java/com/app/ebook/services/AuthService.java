@@ -56,9 +56,9 @@ public class AuthService {
 
 	public Map<String, String> login(Map<String, String> payload) {
 		authManager.authenticate(
-			new UsernamePasswordAuthenticationToken(payload.get("email"), payload.get("password"))
+			new UsernamePasswordAuthenticationToken(payload.get("identifier"), payload.get("password"))
 		);
-		var user=repository.findByEmailOrUsername(payload.get("email")).orElseThrow(()->new UsernameNotFoundException("User not found"));
+		var user=repository.findByEmailOrUsername(payload.get("identifier")).orElseThrow(()->new UsernameNotFoundException("User not found"));
 		var jwt=jwtUtil.generateToken(user);
 		var res=Collections.singletonMap("token", jwt);
 		return res;

@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,30 +45,24 @@ public class AuthController {
 		return new ResponseEntity<>(authService.register(userDto),HttpStatus.CREATED);
 	}
 	
-	
-    @Operation(summary = "User login", description = "Authenticates a user with credentials",
+    @Operation(summary = "User login", description = "Authenticates a user with credentials", // using a DTO would be much simpler
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Login request payload",
                     required = true,
-                    content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = Map.class),
-                        examples = @ExampleObject("{\"email\": \"user@example.com\", \"password\": \"password123\"}")
-                    )
-                ))
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Login successful",
-                content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = Map.class),
-                examples = @ExampleObject(value = "{\"token\": \"JWT token\"}")
-        )),
-        @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
-    })
+                    content = @Content(mediaType = "application/json", schemaProperties = {
+                            @SchemaProperty(name = "identifier", schema = @Schema(
+                                    type = "string", 
+                                    description = "The user's identifier, either email or username", 
+                                    example = "user@example.com or username")),
+                            @SchemaProperty(name = "password", schema = @Schema(
+                                    type = "string",
+                                    description = "The user's password",
+                                    example = "password123")) } )))
+    @ApiResponse(responseCode = "200", description = "Login successful",
+            content = @Content(examples = @ExampleObject(value = "{\"token\": \"JWT token\"}")))
+    @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> postMethodName(@RequestBody Map<String, String> payload) {
+	public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> payload) {
 		return ResponseEntity.ok(authService.login(payload));
 	}
-	
-	
-	
 }

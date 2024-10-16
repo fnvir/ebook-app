@@ -1,5 +1,7 @@
 package com.app.ebook.services;
 
+import com.app.ebook.dto.FavouriteResponseDTO;
+import com.app.ebook.mapper.FavouriteMapper;
 import com.app.ebook.model.Favourite;
 import com.app.ebook.model.Favourite.FavouriteBookId;
 import com.app.ebook.repository.FavouriteRepository;
@@ -20,6 +22,7 @@ import java.util.List;
 public class FavouriteService {
 
     private final FavouriteRepository repository;
+    private final FavouriteMapper favMapper;
     
     public Favourite addFavourite(Favourite favourite) {
         return repository.save(favourite);
@@ -43,11 +46,11 @@ public class FavouriteService {
         return repository.existsById(id);
     }
 
-    public List<Favourite> getAllFavouritesByUser(Long userId) {
-        return repository.findAllByUserUserId(userId);
+    public List<FavouriteResponseDTO> getAllFavouritesByUser(Long userId) {
+        return repository.findAllByUserUserId(userId).stream().map(favMapper::favouriteToFavouriteResponseDTO).toList();
     }
 
-    public Page<Favourite> getFavouritesByUser(Long userId, final Pageable pageable) {
-        return repository.findByUserUserId(userId,pageable);
+    public Page<FavouriteResponseDTO> getFavouritesByUser(Long userId, final Pageable pageable) {
+        return repository.findByUserUserId(userId,pageable).map(favMapper::favouriteToFavouriteResponseDTO);
     }
 }

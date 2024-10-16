@@ -19,6 +19,8 @@ public interface UserMapper {
 	@Mapping(source = "picture", ignore = true, target = "picturePath")
 	@Mapping(target="password", ignore=true)
 	@Mapping(target="role", ignore=true)
+    @Mapping(target="userId", ignore=true)
+    @Mapping(target="profileViews", ignore=true)
 	User userRegDTO_toUser(UserRegistrationDTO dto);
 	UserDTO userToUserDTO(User user);
 	

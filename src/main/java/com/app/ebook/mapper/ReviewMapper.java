@@ -1,6 +1,7 @@
 package com.app.ebook.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.app.ebook.dto.ReviewResponseDTO;
@@ -12,7 +13,7 @@ public interface ReviewMapper {
     
     ReviewMapper INSTANCE = Mappers.getMapper(ReviewMapper.class);
 
-    // Map Review entity to ReviewResponseDTO
+    @Mapping(source="anonymous", target="isAnonymous")
     ReviewResponseDTO reviewToReviewResponseDTO(Review review);
     
     ReviewResponseDTO reviewsByBookToReviewResponseDTO(ReviewsByBook review);

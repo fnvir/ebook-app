@@ -2,6 +2,7 @@ package com.app.ebook.controller;
 
 import java.util.List;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class ReviewController {
     }
     
 	@GetMapping("/user/{id}")
-	public ResponseEntity<Page<ReviewResponseDTO>> getReviewsByUser(@PathVariable Long id, final Pageable pageable) {
+	public ResponseEntity<Page<ReviewResponseDTO>> getReviewsByUser(@PathVariable Long id, @ParameterObject final Pageable pageable) {
 		return ResponseEntity.ok(reviewService.getReviewsWithoutReviewerAndBookUploader(id, pageable));
 	}
     
@@ -53,7 +54,7 @@ public class ReviewController {
     
 	@GetMapping("/book/{id}")
 	public ResponseEntity<Page<ReviewResponseDTO>> getReviewsOfBookPageable(@PathVariable Long id,
-			final Pageable pageable) {
+	        @ParameterObject final Pageable pageable) {
 		return ResponseEntity.ok(reviewService.getReviewsOfBookPageable(id, pageable));
 	}
 	

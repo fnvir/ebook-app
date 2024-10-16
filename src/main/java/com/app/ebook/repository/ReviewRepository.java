@@ -17,7 +17,7 @@ import com.app.ebook.model.User;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 	
-	@Query("SELECT r FROM Review r JOIN FETCH r.reviewer JOIN FETCH r.book b JOIN FETCH b.uploader")
+	@Query("SELECT r FROM Review r LEFT JOIN FETCH r.reviewer LEFT JOIN FETCH r.book b LEFT JOIN FETCH b.uploader")
 	List<Review> findAll();
 	
 	@Query("SELECT r.reviewer.userId FROM Review r where r.reviewId = ?1")
