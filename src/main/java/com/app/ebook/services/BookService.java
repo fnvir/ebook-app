@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,16 +49,21 @@ public class BookService {
 	}
 	
 	public BookResponseDTO createBookWithFile(BookUploadRequestDTO bookDTO) throws IOException {
-		User uploader = userService.getUserById(bookDTO.getUploaderId())
-				.orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + bookDTO.getUploaderId()));
+		User uploader = userService.getUserById(bookDTO.getUploaderId());
 		MultipartFile file = bookDTO.getFile();
         String pdfUrl = storageService.storeUserContent(uploader.getUsername(), bookDTO.getTitle(), file);
-        Book book = new Book(bookDTO.getTitle(),bookDTO.getAuthor(),bookDTO.getGenre(),bookDTO.getDescription(),uploader,pdfUrl);
+        Book book = bookMapper.bookUploadRequestToBook(bookDTO);
+        book.setUploader(uploader);
+        book.setPdfUrl(pdfUrl);
         return bookMapper.bookToBookResponseDTO(bookRepo.save(book));
+	}
+	
+	public Book findBookById(Long bookId) {
+	    return bookRepo.findById(bookId).orElseThrow(()->new IllegalArgumentException("No such books found"));
 	}
 
 	public BookResponseDTO getBookById(Long id) {
-		Book b = bookRepo.findById(id).orElseThrow(()->new IllegalArgumentException("No such books found"));
+		Book b = findBookById(id);
 		return bookMapper.bookToBookResponseDTO(b);
 	}
 }

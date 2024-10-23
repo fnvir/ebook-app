@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping(path="/api/auth",produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path="/api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "API for user authentication and registration")
 public class AuthController {
@@ -40,7 +40,7 @@ public class AuthController {
 	    @ApiResponse(responseCode = "201", description = "User registered successfully"),
 	    @ApiResponse(responseCode = "400", description = "Bad request, validation failed", content = @Content)
 	})
-	@PostMapping(path="/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path="/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<UserDTO> register(@ModelAttribute @Valid UserRegistrationDTO userDto) {
 		return new ResponseEntity<>(authService.register(userDto),HttpStatus.CREATED);
 	}

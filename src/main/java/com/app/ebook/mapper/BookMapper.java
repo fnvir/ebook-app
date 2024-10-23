@@ -14,6 +14,7 @@ public interface BookMapper {
     BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
     
     BookResponseDTO bookToBookResponseDTO(Book book);
+    
     @Mapping(target = "bookId", ignore=true)
     @Mapping(target = "uploader", ignore=true)
     @Mapping(target = "pdfUrl", ignore=true)

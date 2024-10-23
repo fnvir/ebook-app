@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ebook.config.FileStorageProps;
-import com.app.ebook.exceptions.FileStorageException;
+import com.app.ebook.exceptions.StorageServiceException;
 import com.app.ebook.exceptions.StorageFileNotFoundException;
 
 @Service
@@ -30,7 +30,7 @@ public class FileStorageService {
         try {
             Files.createDirectories(this.storageLocation);
         } catch (Exception e) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", e);
+            throw new StorageServiceException("Could not create the directory where the uploaded files will be stored.", e);
         }
     }
     
@@ -45,12 +45,12 @@ public class FileStorageService {
 		Path destinationFile = storageLocation.resolve(fileName)
 				.normalize().toAbsolutePath();
 		if (!destinationFile.getParent().equals(storageLocation.toAbsolutePath())) {
-			throw new FileStorageException(	"Cannot store file outside current directory.");
+			throw new StorageServiceException("Cannot store file outside current directory.");
 		}
         try {
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+            throw new StorageServiceException("Could not store file " + fileName + ". Please try again!", ex);
         }
         return "/content/"+fileName;
     }
@@ -66,7 +66,7 @@ public class FileStorageService {
             try {
         		Files.createDirectories(userDir);
 	        } catch (IOException e) {
-	            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", e);
+	            throw new StorageServiceException("Could not create the directory where the uploaded files will be stored.", e);
 	        }
         }
     	Path destinationFile = userDir.resolve(filename).normalize().toAbsolutePath();
@@ -74,20 +74,20 @@ public class FileStorageService {
     		Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
     		return "/content/"+username+"/"+filename;
     	} catch (IOException ex) {
-    		throw new FileStorageException("Could not store file " + filename + ". Please try again!", ex);
+    		throw new StorageServiceException("Could not store file " + filename + ". Please try again!", ex);
     	}
     }
 
     private void validateFile(MultipartFile file) {
         if (file.isEmpty()) 
-            throw new FileStorageException("Cannot upload empty file");
+            throw new StorageServiceException("Cannot upload empty file");
         
         if (file.getSize() > properties.getMaxSize()) 
-            throw new FileStorageException("File size exceeds the limit of " + properties.getMaxSize() + " bytes.");
+            throw new StorageServiceException("File size exceeds the limit of " + properties.getMaxSize() + " bytes.");
         
         String fileType = file.getContentType();
         if (!properties.getAllowedTypes().contains(fileType)) {
-            throw new FileStorageException("File type " + fileType + " is not allowed.");
+            throw new StorageServiceException("File type " + fileType + " is not allowed.");
         }
     }
 

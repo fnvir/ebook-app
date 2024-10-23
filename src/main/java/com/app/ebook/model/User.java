@@ -1,10 +1,12 @@
-
 package com.app.ebook.model;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -71,20 +73,28 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     @Builder.Default
     private Integer profileViews=0;
+    
+    @Column(updatable = false)
+    @CreationTimestamp
+    @ColumnDefault("current_timestamp")
+    private LocalDateTime createdAt;
 
-	public User(String firstName, String lastName, String username, String email, String password,
-			String picturePath, Role role) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.picturePath = picturePath;
-		this.role = role;
-	}
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
+
+    public User(String firstName, String lastName, String username, String email, String password, String picturePath,
+            Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.picturePath = picturePath;
+        this.role = role;
+    }
 }

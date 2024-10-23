@@ -21,29 +21,17 @@ import com.app.ebook.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ReviewService {
 	
 	private final ReviewRepository reviewRepo;
-    private final BookRepository bookRepo;
-    private final UserRepository userRepo;
     private final ReviewMapper reviewMapper;
 	
     public Review addReview(ReviewRequestDTO reviewRequest) {
-        Book book = bookRepo.findById(reviewRequest.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-        
-		User reviewer = userRepo.findById(reviewRequest.getReviewerId())
-				.orElseThrow(() -> new RuntimeException("User not found"));
 		
-        Review review = Review.builder()
-        				.book(book)
-        				.rating(reviewRequest.getRating())
-        				.reviewText(reviewRequest.getReviewText())
-        				.reviewer(reviewer)
-        				.build();
+        Review review = reviewMapper.reviewRequestToReview(reviewRequest);
         
         if (reviewRequest.getIsAnonymous()!=null) {
         	review.setAnonymous(reviewRequest.getIsAnonymous());

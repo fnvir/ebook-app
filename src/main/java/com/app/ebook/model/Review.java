@@ -1,6 +1,5 @@
 package com.app.ebook.model;
 
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -25,7 +24,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Review {
 
     @Id
@@ -38,13 +36,14 @@ public class Review {
     
     @Column(nullable = false)
     @ColumnDefault("false")
-    private boolean isAnonymous;
+    private boolean isAnonymous=false;
 
     @ManyToOne
     @JoinColumn(name = "bookId")
     private Book book;
     
-    private int rating;
+    @Column(nullable = false)
+    private short rating;
     
     @Column(columnDefinition="TEXT")
     private String reviewText;

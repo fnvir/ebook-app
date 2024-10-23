@@ -29,10 +29,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Reviews", description = "API for handling reviews")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/reviews")
-@RequiredArgsConstructor
-@Tag(name = "Reviews", description = "API for handling reviews")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
@@ -47,6 +47,7 @@ public class ReviewController {
 		return ResponseEntity.ok(reviewService.getReviewsWithoutReviewerAndBookUploader(id, pageable));
 	}
     
+	@Operation(summary="Get all reviews of a book")
     @GetMapping("/book/{id}/all")
     public List<ReviewResponseDTO> getReviewsOfBook(@PathVariable Long id){
     	return reviewService.getReviewsOfBook(id);

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.data.domain.Example;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,10 +45,13 @@ public class AuthService {
 	}
 	
 	public UserDTO register(UserRegistrationDTO regDTO, Role role) {
+	    if(repository.existsByEmailOrUsername(regDTO.getEmail(), regDTO.getUsername()))
+	        throw new IllegalArgumentException("Username or Email already in use!");
 	    User user = userMapper.userRegDTO_toUser(regDTO);
-	    user.setPicturePath(storageService.storeFile(
-	            regDTO.getPicture(),
-                regDTO.getUsername() + "_" + UUID.randomUUID().toString().replace("-", "")));
+	    if(regDTO.getPicture()!=null)
+    	    user.setPicturePath(storageService.storeFile(
+    	            regDTO.getPicture(),
+                    regDTO.getUsername() + "_" + UUID.randomUUID().toString().replace("-", "")));
 	    user.setRole(role);
 	    user.setPassword(encoder.encode(regDTO.getPassword()));
 		user=repository.save(user);

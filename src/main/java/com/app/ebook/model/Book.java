@@ -35,6 +35,7 @@ public class Book {
     private String title;
     private String author;
     private String genre;
+    @Column(length = 1000)
     private String description;
     @ManyToOne
     @JoinColumn(name = "uploader_id", referencedColumnName = "userId")
@@ -48,14 +49,5 @@ public class Book {
 
 	@UpdateTimestamp
     private LocalDateTime updatedAt;
-    
-    public Book(String title, String author, String genre, String description, User uploader, String pdfUrl) {
-		this.title = title;
-		this.author = author;
-		this.genre = genre;
-		this.uploader = uploader;
-		this.description = description;
-		this.pdfUrl=pdfUrl;
-	}
     
 }

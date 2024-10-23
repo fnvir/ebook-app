@@ -8,6 +8,7 @@ public class MyConstants {
             "/swagger-ui/**", 
             "/api-docs/**",
             "/api/auth/**",
+            "/content/{filename:.+}"
     };
     
 	public static final String USER_BASE_URL = "/api/users";

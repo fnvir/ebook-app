@@ -27,17 +27,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/books")
 @Tag(name = "Books", description = "API for handling books")
+@RequiredArgsConstructor
 public class BookController {
 	
-	private BookService bookService;
-	
-	public BookController(BookService bs) {
-		bookService=bs;
-	}
+	private final BookService bookService;
 	   
     @GetMapping
     @Operation(summary = "Get books paginated")
@@ -52,6 +50,7 @@ public class BookController {
 	}
 	
 	@GetMapping("/{id}")
+	@Operation(summary = "Get a book by id")
 	public ResponseEntity<BookResponseDTO> getAllBooks(@PathVariable Long id) {
 		return ResponseEntity.ok(bookService.getBookById(id));
 	}

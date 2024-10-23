@@ -33,8 +33,8 @@ public class UserService {
 				z && orderBy.toLowerCase().equals("desc") ? s.descending() : s.ascending()));
 	}
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("User ID invalid"));
     }
     
     public UserDTO viewProfile(Long userId) {
@@ -56,15 +56,11 @@ public class UserService {
     }
 
     public User updateUser(Long userId, User userDetails) {
-        Optional<User> u = getUserById(userId);
-        if (u.isPresent()) {
-        	User user=u.get();
-            user.setUsername(userDetails.getUsername());
-            user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
-            return userRepository.save(user);
-        }
-        return null;
+        User user = getUserById(userId);
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setPassword(userDetails.getPassword());
+        return userRepository.save(user);
     }
     
     public void deleteUser(Long userId) {

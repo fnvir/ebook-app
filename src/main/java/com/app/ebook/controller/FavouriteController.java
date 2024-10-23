@@ -5,6 +5,7 @@ import com.app.ebook.model.Favourite;
 import com.app.ebook.model.Favourite.FavouriteBookId;
 import com.app.ebook.services.FavouriteService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,21 +32,25 @@ public class FavouriteController {
 
     private final FavouriteService favouriteService;
 
+    @Operation(summary = "Get all favourites of a user")
     @GetMapping("/user/{userId}/all")
     public ResponseEntity<List<FavouriteResponseDTO>> getFavouritesByUser(@PathVariable Long userId) {
         var favourites = favouriteService.getAllFavouritesByUser(userId);
         return ResponseEntity.ok(favourites);
     }
     
+    @Operation(summary = "Get paginated favourites of a user")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<FavouriteResponseDTO>> getFavouritesByUser(@PathVariable Long userId, @ParameterObject final Pageable pageable) {
-        var favourites = favouriteService.getFavouritesByUser(userId,pageable);
+    public ResponseEntity<Page<FavouriteResponseDTO>> getFavouritesByUser(@PathVariable Long userId,
+            @SortDefault(sort = "createdAt", direction = Direction.DESC) @ParameterObject final Pageable pageable) {
+        var favourites = favouriteService.getFavouritesByUser(userId, pageable);
         return ResponseEntity.ok(favourites);
     }
     
-    @PostMapping("/{userId}/{bookId}")
+    @Operation(summary = "Add a book to a user's favourites")
     @ApiResponse(responseCode = "200", description = "Added as favourite successfully!", content = @Content)
     @ApiResponse(responseCode = "400", description = "Book already exists in user's favourites", content=@Content)
+    @PostMapping("/{userId}/{bookId}")
     public ResponseEntity<String> addFavourite(@PathVariable Long userId, @PathVariable Long bookId) {
         if(favouriteService.exists(userId, bookId))
             return ResponseEntity.badRequest().body("Book already exists in user's favourites");
@@ -51,8 +58,9 @@ public class FavouriteController {
         return ResponseEntity.ok("Added successfully!");
     }
 
-    @DeleteMapping("/{userId}/{bookId}")
+    @Operation(summary = "Remove a book from a user's favourites")
     @ApiResponse(responseCode = "204")
+    @DeleteMapping("/{userId}/{bookId}")
     public ResponseEntity<Void> removeFavourite(@PathVariable Long userId, @PathVariable Long bookId) {
         favouriteService.removeFavourite(userId, bookId);
         return ResponseEntity.noContent().build();
