@@ -1,22 +1,29 @@
 services:
-  elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.10'
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
-      - 'ELASTIC_PASSWORD=secret'
-      - 'discovery.type=single-node'
-      - 'xpack.security.enabled=false'
+      - DB_URL=jdbc:postgresql://pgdb:5432/ebook_app
+#    env_file:
+#      - path: .env
+#        required: true
     ports:
-      - '9200'
-      - '9300'
-  mongodb:
-    image: 'mongo:latest'
+      - 8080:8080
+    depends_on:
+      - db
+  db:
+    container_name: pgdb
+    image: postgres:16-alpine
+    restart: always
     environment:
-      - 'MONGO_INITDB_DATABASE=mydatabase'
-      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
-      - 'MONGO_INITDB_ROOT_USERNAME=root'
+      POSTGRES_DB: ebook_app
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - '27017'
-  redis:
-    image: 'redis:latest'
-    ports:
-      - '6379'
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
