@@ -1,8 +1,8 @@
 FROM eclipse-temurin:21-jdk-alpine AS builder
 ARG APP_HOME=/opt/app
 WORKDIR ${APP_HOME}
-#RUN --mount=type=cache,target=/root/.gradle \
-#    apk add --no-cache bash
+RUN --mount=type=cache,target=/root/.gradle \
+    apk add --no-cache bash
 COPY gradle/ gradle
 COPY gradlew build.gradle settings.gradle .
 COPY ./src ./src

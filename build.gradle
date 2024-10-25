@@ -52,11 +52,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-test {
-    testLogging {
-        events "passed", "skipped", "failed"
-        showStandardStreams = true
-    }
-
-    systemProperties["org.gradle.logging.level"] = "INFO"
-}
+//test {
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//        showStandardStreams = true
+//    }
+//    systemProperties["org.gradle.logging.level"] = "INFO"
+//}

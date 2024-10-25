@@ -29,6 +29,11 @@
       "name": "storage.allowed-types",
       "type": "java.util.List",
       "description": "Allowed MIME types"
+    },
+    {
+      "name": "app.initialize-tempdata",
+      "type": "java.lang.Boolean",
+      "description": "Whether the initialize the database with temp data on first run"
     }
   ]
 }

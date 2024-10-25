@@ -1,33 +1,31 @@
-#server:
-#  port: 5000
-
-logging:
-   level:
-      org.springframework.web: info
-      org.hibernate.orm.jdbc.bind: info
-      org.hibernate.type.descriptor.sql: info
+app:
+  initialize-tempdata: true
 
 spring:
-   config:
-      import: optional:file:${user.dir}/.env[.properties]
-   application:
-      name: ebook_app
-   datasource:
-      url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
-      username: ${DB_USER}
-      password: ${DB_PASS}
-      driver-class-name: org.postgresql.Driver
-   jpa:
-      hibernate:
-         ddl-auto: update
-      properties:
-        hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-        hibernate.format_sql: true
-      show-sql: true
-   servlet:
-      multipart:
-         max-file-size: 100MB
-         max-request-size: 20MB
+  config:
+    import: optional:file:${user.dir}/.env[.properties]
+  application:
+    name: ebook_app
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}?currentSchema=public
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+#  sql:
+#    init:
+#      mode: always
+  jpa:
+#    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.format_sql: true
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 20MB
 
 springdoc:
   api-docs:
@@ -37,17 +35,25 @@ springdoc:
     tags-sorter: alpha
 
 jwt:
-   secret: ${JWT_SECRET}
-   expiration: 259200000 # 3 days
-   refresh.expiration: 604800000 # 7 days
+  secret: ${JWT_SECRET}
+  expiration: 259200000 # 3 days
+  refresh.expiration: 604800000 # 7 days
 
 storage:
-   upload-dir: ./useruploads
-   allowed-types:
-   - image/png
-   - image/apng
-   - image/jpeg
-   - image/gif
-   - image/webp
-   - application/pdf
-   max-size: 104857600 # 100 MB
+  upload-dir: ./useruploads
+  allowed-types:
+    - image/png
+    - image/apng
+    - image/jpeg
+    - image/gif
+    - image/webp
+    - application/pdf
+  max-size: 104857600 # 100 MB
+
+logging:
+  level:
+    org.springframework.web: info
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace
+    
+#server.port: 5000
