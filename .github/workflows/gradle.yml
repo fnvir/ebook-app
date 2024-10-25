@@ -19,7 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
+    services:
+      postgres_db:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${{ vars.DB_PASSWORD }}
+          POSTGRES_DB: ebook_app
+        ports:
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DB_HOST: localhost
+      DB_NAME: ebook_app
+      DB_USER: postgres
+      DB_PASS: ${{ vars.DB_PASSWORD }}
+      DB_PORT: 5432       # Standard PostgreSQL port
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
