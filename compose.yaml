@@ -1,29 +1,40 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: .
+    container_name: ebook_app
+    env_file:
+      - path: .env
+        required: true
     environment:
-      - DB_URL=jdbc:postgresql://pgdb:5432/ebook_app
-#    env_file:
-#      - path: .env
-#        required: true
+      DB_HOST: db # override .env
     ports:
       - 8080:8080
     depends_on:
       - db
+    networks:
+      - spring-postgres
   db:
-    container_name: pgdb
     image: postgres:16-alpine
+    container_name: pgdb
     restart: always
     environment:
-      POSTGRES_DB: ebook_app
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
-    ports:
-      - 5432:5432
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+#      interval: 10s
+#      retries: 5
+#      start_period: 30s
+#      timeout: 10s
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - spring-postgres
+    ports:
+      - 5432:5432
 
 volumes:
   postgres_data:
+networks:
+  spring-postgres:
