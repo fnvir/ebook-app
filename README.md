@@ -1,4 +1,4 @@
-# Ebook Application[![Build Status](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml/badge.svg)](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml)
+# Ebook Sharing App (Backend) [![Build Status](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml/badge.svg)](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml)
 
 A Spring Boot application for uploading & sharing books. It includes features like user authentication and authorization, file storage, and more. The application is configured to use PostgreSQL as the database and supports Docker for containerization. API descriptions are also avaiable with OpenAPI and Swagger UI.
 
