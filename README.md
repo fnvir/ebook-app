@@ -1,13 +1,38 @@
-# Ebook Application
+# Ebook Application[![Build Status](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml/badge.svg)](https://github.com/fnvir/ebook-app/actions/workflows/gradle.yml)
 
-A Spring Boot application for sharing pdfs. It includes features for user authentication, file storage, and more. The application is configured to use PostgreSQL as the database and supports Docker for containerization.
+A Spring Boot application for uploading & sharing books. It includes features like user authentication and authorization, file storage, and more. The application is configured to use PostgreSQL as the database and supports Docker for containerization. API descriptions are also avaiable with OpenAPI and Swagger UI.
+
 
 ## Features
 
-- **User Authentication**: Register and login users with JWT-based authentication.
-- **File Storage**: Upload and manage files with validation for file types and size.
-- **Swagger UI**: API documentation and testing using Swagger UI.
-- **Docker Support**: Containerize the application using Docker.
+**User Authentication & Authorization**: 
+  - Register and login users with JWT authentication.
+  - Secure endpoints with Spring Security.
+  - Role-based access control.
+
+**Book Management**:
+  - Read, add, or delete books.
+  - View list of all uploaded books.
+  - View book details.
+
+**Reviews & Favourites**: 
+  - Add reviews to uploaded books.
+  - Add books to their favourites.
+  - Retrieve reviews by user or book.
+  - Paginated review retrieval.
+
+**File Storage**:
+  - Upload and manage PDFs & other files.
+  - Validate file types and size.
+  - Store user-specific content.
+  - Serve files as resources.
+
+**Pagination & Sorting**: Support for paginated API responses.
+
+**Swagger UI**: API documentation and testing using Swagger UI.
+
+**Docker Support**: Containerize the application using Docker.
+
 
 ## Prerequisites
 
@@ -18,43 +43,45 @@ A Spring Boot application for sharing pdfs. It includes features for user authen
 
 - Docker
 
+
 ## Configuration
 
-The application uses environment variables for configuration. Create a `.env` file in the root directory similar to the `.env.example` file.
+The application uses environment variables for configuration. Create a `.env` file in the root directory similar to the [.env.example](./.env.example) file.
+
 
 ## Running the Application
 
-### Using Docker Compose
+### Using Docker Compose:
+```sh
+docker compose up
+```
 
-1. **Build and Run the Docker image**:
-    ```sh
-    docker compose up
-    ```
+### Using Gradle:
+```sh
+./gradlew clean bootRun
+```
 
-### Using Gradle
-1. **Build & Run the project**:
-    ```sh
-    ./gradlew clean bootRun
-    ```
-    Make sure to run PostgreSQL and create a database with a name similar to `DB_NAME` specified in the `.env` file before running the application.
+*Make sure to run PostgreSQL and create a database with a name similar to `DB_NAME` specified in the `.env` file before running the application. (Not needed in Docker)*
+
+## ER Diagram
+
+![ebook_app - public](https://github.com/user-attachments/assets/a8315b88-567a-46ac-8980-3fa326260831)
+
 
 ## Swagger UI
 
-The application includes Swagger UI for API documentation and testing. Once the application is running, you can access Swagger UI at:
+The app includes Swagger UI for API documentation and testing. Once the app is running, you can access Swagger UI at:
 
-```
-http://localhost:8080/swagger-ui.html
-```
+http://localhost:8080/swagger-ui/index.html
 
 To access the OpenAPI docs:
-```
-http://localhost:8080/api-docs
 
-http://localhost:8080/api-docs.yaml
-```
-## License
+http://localhost:8080/api-docs or http://localhost:8080/api-docs.yaml
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+![Swagger-UI-10-26-2024_07_35_PM](https://github.com/user-attachments/assets/b63287bc-1942-4de8-ad5e-cc1035acf1f7)
+
+
+
 
 ## Contact
 
