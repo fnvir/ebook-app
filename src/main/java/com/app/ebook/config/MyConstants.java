@@ -6,7 +6,8 @@ public class MyConstants {
     
     public static final String[] PUBLIC_URLS = { //any http method
             "/swagger-ui/**", 
-            "/api-docs/**",
+            "/api-docs",
+            "/api-docs.**",
             "/api/auth/**",
             "/content/{filename:.+}"
     };

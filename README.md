@@ -33,7 +33,6 @@ A Spring Boot application for uploading & sharing books. It includes features li
 
 **Docker Support**: Containerize the application using Docker.
 
-
 ## Prerequisites
 
 - Java 21+
@@ -51,7 +50,7 @@ The application uses environment variables for configuration. Create a `.env` fi
 
 ## Running the Application
 
-### Using Docker Compose:
+### Using Docker:
 ```sh
 docker compose up
 ```
@@ -65,7 +64,7 @@ docker compose up
 
 ## ER Diagram
 
-![ebook_app - public](https://github.com/user-attachments/assets/a8315b88-567a-46ac-8980-3fa326260831)
+![ebook_app - ER Diagram](https://github.com/user-attachments/assets/a8315b88-567a-46ac-8980-3fa326260831)
 
 
 ## Swagger UI
@@ -81,8 +80,26 @@ http://localhost:8080/api-docs or http://localhost:8080/api-docs.yaml
 ![Swagger-UI-10-26-2024_07_35_PM](https://github.com/user-attachments/assets/b63287bc-1942-4de8-ad5e-cc1035acf1f7)
 
 
+## Technologies
+- Java 21
+- Spring Boot 3.3
+- Gradle
+- PostgreSQL
+- Docker
+- Spring Data JPA
+- Spring Security
+- JSON Web Tokens (JWT)
+- Swagger UI
+- OpenAPI
+- Lombok
+- MapStruct
 
 
-## Contact
+## Contributing
+For bug reports, suggestions, or improvements, please use the [GitHub issue tracker](https://github.com/fnvir/ebook-app/issues).
 
-For any inquiries or issues, please contact the project maintainer.
+To contribute code, fork the repository, make your changes, and submit a pull request. Be sure to check for any existing issues or discussions related to your contribution.
+
+
+## License
+This application is released under the [MIT License](./LICENSE).
